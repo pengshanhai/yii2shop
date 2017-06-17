@@ -8,6 +8,19 @@ use yii\filters\AccessControl;
 
 class UserController extends \yii\web\Controller
 {
+    public function actionInit()
+    {
+
+        $admin = new User();
+        $admin->username = 'admin';
+        $admin->password = '12345678';
+        $admin->email = 'admin@admin.com';
+        $admin->auth_key = \Yii::$app->security->generateRandomString();
+        $admin->save();
+        return $this->redirect(['user/login']);
+        //注册完成后自动帮用户登录账号
+        //\Yii::$app->user->login($admin);
+    }
     public function actionIndex()
     {
         $model=User::find()->all();
