@@ -11,6 +11,7 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
+    //'language'=>'zh-CN',//报错提示语言
     'modules' => [],
     'language'=>'zh-CN',
     'components' => [
@@ -18,7 +19,10 @@ return [
             'csrfParam' => '_csrf-backend',
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'loginUrl' => ['user/login'],//默认登录地址
+            //设置实现认证接口的类
+            'identityClass' => 'backend\models\User',
+            //'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
         ],

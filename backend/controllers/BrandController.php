@@ -97,7 +97,7 @@ class BrandController extends \yii\web\Controller
                 'afterValidate' => function (UploadAction $action) {},
                 'beforeSave' => function (UploadAction $action) {},
                 'afterSave' => function (UploadAction $action) {
-                    //把图片上传到阿里云oss
+                    //得到图片
                     $path = $action->getWebUrl();
                     //获取该文件在本地的绝对路径
                     $filepath = \Yii::getAlias('@webroot').'/'.$path;
