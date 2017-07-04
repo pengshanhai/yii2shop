@@ -7,6 +7,7 @@ $params = array_merge(
 );
 
 return [
+    'defaultRoute' => 'content/index',//指定自己的首页
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
@@ -17,7 +18,7 @@ return [
             'csrfParam' => '_csrf-frontend',
         ],
         'user' => [
-            'loginUrl' => ['member/login'],//�ı�Ĭ�ϵĵ�¼��ַ
+            'loginUrl' => ['member/login'],//自己定义登录url
             'identityClass' => 'frontend\models\Member',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
