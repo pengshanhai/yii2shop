@@ -60,8 +60,9 @@ class RoleForm extends Model{
         $this->name=$role->name;
         $this->description=$role->description;
         $permissions=$authManager->getPermissionsByRole($role->name);
+        //return $permissions;
         foreach($permissions as $permission){
-            $this->permissions=$permission->name;
+            $this->permissions[]=$permission->name;
         }
     }
     public function alterRole($name){

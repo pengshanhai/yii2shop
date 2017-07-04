@@ -7,7 +7,7 @@ use backend\models\Brand;
 //use yii\web\UploadedFile;
 use xj\uploadify\UploadAction;
 
-class BrandController extends \yii\web\Controller
+class BrandController extends BackendController
 {
     public function actionIndex()
     {

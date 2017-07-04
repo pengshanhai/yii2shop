@@ -4,7 +4,7 @@ namespace backend\controllers;
 
 use backend\models\ArticleCategory;
 
-class ArticleCategoryController extends \yii\web\Controller
+class ArticleCategoryController extends BackendController
 {
     public function actionIndex()
     {

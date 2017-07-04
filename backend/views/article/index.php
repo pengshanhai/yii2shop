@@ -2,7 +2,6 @@
 /* @var $this yii\web\View */
 ?>
 <h1>文章表</h1>
-<?=\yii\bootstrap\Html::a('增加文章',['add'],['class'=>'btn btn-primary'])?>
 <table class="table">
     <tr>
         <th>ID</th>

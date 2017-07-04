@@ -2,12 +2,22 @@
 
 namespace backend\controllers;
 
+use backend\components\RbacFilter;
 use backend\models\LoginForm;
 use backend\models\User;
 use yii\filters\AccessControl;
 
 class UserController extends \yii\web\Controller
 {
+    public function behaviors()
+        {
+            return [
+                'rbac'=>[
+                    'class'=>RbacFilter::className(),
+                    'only'=>['add','alter','delete'],
+                ]
+            ];
+        }
     public function actionInit()
     {
 
@@ -38,16 +48,32 @@ class UserController extends \yii\web\Controller
         if($model->load(\yii::$app->request->post())&&$model->validate()){
             //$model->password_hash=\yii::$app->security->generatePasswordHash($model->password_hash);
             $model->save();
-            \yii::$app->session->setFlash('success','增加用户成功！');
-            return $this->redirect(['index']);
+            if($model->addUser($model->id)){
+                \yii::$app->session->setFlash('success','增加用户角色成功');
+                return $this->redirect(['index']);
+            }
         }
         return $this->render('edit',['model'=>$model]);
     }
-    public function actionAlter(){
-
+    public function actionAlter($id){
+        $model=User::findOne(['id'=>$id]);
+        //var_dump($model->addData($id));exit;
+        $model->addData($id);
+        //var_dump($model);exit;
+        if($model->load(\yii::$app->request->post())&&$model->validate()){
+            if($model->alterUser($id)){
+                \yii::$app->session->setFlash('success','修改用户角色成功');
+                return $this->redirect(['index']);
+            }
+        }
+        return $this->render('edit',['model'=>$model]);
     }
-    public function actionDelete(){
-
+    public function actionDelete($id){
+        $model=User::findOne(['id'=>$id]);
+        $model->delete();
+        \yii::$app->authManager->revokeAll($id);
+        \yii::$app->session->setFlash('success','删除用户角色成功');
+        return $this->redirect(['user/index']);
     }
 
     public function actionLogin(){
@@ -67,7 +93,7 @@ class UserController extends \yii\web\Controller
         \Yii::$app->user->logout();
         return $this->redirect(['login']);
     }
-    public function behaviors()
+    /*public function behaviors()
     {
         return [
             'acf'=>[
@@ -88,5 +114,5 @@ class UserController extends \yii\web\Controller
                 ]
             ],
         ];
-    }
+    }*/
 }

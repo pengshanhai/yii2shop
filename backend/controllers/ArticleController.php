@@ -6,7 +6,7 @@ use backend\models\Article;
 use backend\models\ArticleCategory;
 use backend\models\ArticleDetail;
 
-class ArticleController extends \yii\web\Controller
+class ArticleController extends BackendController
 {
     public function actionIndex()
     {

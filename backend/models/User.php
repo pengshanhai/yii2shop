@@ -4,7 +4,9 @@ namespace backend\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
+use yii\web\NotFoundHttpException;
 
 /**
  * This is the model class for table "user".
@@ -22,6 +24,7 @@ use yii\web\IdentityInterface;
  */
 class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
+    public $roles=[];
     public $password;
 
     const SCENARIO_ADD = 'add';
@@ -48,6 +51,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             [['username'], 'unique'],
             [['email'], 'unique'],
             [['password_reset_token'], 'unique'],
+            ['roles','safe']//表示该字段不需要验证
         ];
     }
 
@@ -67,6 +71,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'updated_ip' => 'Updated Ip',
+            'roles'=>'角色',
         ];
     }
 //    public function behaviors(){
@@ -79,6 +84,46 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 //            ]
 //        ];
 //    }
+    public static function getRolesName(){
+        return ArrayHelper::map(\yii::$app->authManager->getRoles(),'name','description');
+    }
+    public function addUser($id){
+        if(\backend\models\User::findOne(['id'=>$id])==null){
+            throw new NotFoundHttpException('用户不存在');
+        }else{
+            $authManager=\yii::$app->authManager;
+            foreach($this->roles as $roleName){
+                $role= $authManager->getRole($roleName);
+                $authManager->assign($role,$id);
+            }
+            return true;
+        }
+        return false;
+    }
+    public function addData($id){
+        if(\backend\models\User::findOne(['id'=>$id])==null){
+            throw new NotFoundHttpException('用户不存在');
+        }else {
+            $roles = \yii::$app->authManager->getRolesByUser($id);
+            //return $roles;exit;
+            foreach ($roles as $role) {
+                $this->roles[] = $role->name;
+            }
+        }
+    }
+    public function alterUser($id){
+        if(\backend\models\User::findOne(['id'=>$id])==null){
+            throw new NotFoundHttpException('用户不存在');
+        }else{
+            $authManager=\yii::$app->authManager;
+            $authManager->revokeAll($id);
+            foreach($this->roles as $roleName){
+                $role= $authManager->getRole($roleName);
+                $authManager->assign($role,$id);
+            }
+            return true;
+        }
+    }
     public function beforeSave($insert)
     {
         if($insert){

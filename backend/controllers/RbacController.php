@@ -11,9 +11,8 @@ namespace backend\controllers;
 use backend\models\PermissionForm;
 use backend\models\RoleForm;
 use backend\models\UserForm;
-use yii\web\Controller;
 
-class RbacController extends Controller{
+class RbacController extends BackendController{
     public function actionAddPermission(){
         $model=new PermissionForm();
             if($model->load(\yii::$app->request->post())&&$model->validate()){
@@ -61,6 +60,7 @@ class RbacController extends Controller{
     }
     public function actionAlterRole($name){
         $model=new RoleForm();
+        //var_dump($model->addData($name));exit;
         $model->addData($name);
         if($model->load(\yii::$app->request->post())&&$model->validate()){
             if($model->alterRole($name)){
@@ -77,36 +77,5 @@ class RbacController extends Controller{
         $authManager->remove($role);
         \yii::$app->session->setFlash('success','删除成功');
         return $this->redirect(['index-role']);
-    }
-    public function actionAddUser($id){
-        $model=new UserForm();
-        //var_dump(\backend\models\User::findOne(['id'=>$id]));exit;
-        if($model->load(\yii::$app->request->post())&&$model->validate()){
-            if($model->addUser($id)){
-                \yii::$app->session->setFlash('success','增加用户角色成功');
-                return $this->redirect(['user/index']);
-            }
-        }
-        return $this->render('edit-user',['model'=>$model]);
-    }
-    public function actionAlterUser($id){
-        $model=new UserForm();
-        $model->addData($id);
-        //var_dump($model);exit;
-        if($model->load(\yii::$app->request->post())&&$model->validate()){
-            if($model->alterUser($id)){
-                \yii::$app->session->setFlash('success','修改用户角色成功');
-                return $this->redirect(['user/index']);
-            }
-        }
-        return $this->render('edit-user',['model'=>$model]);
-    }
-    public function actionIndexUser(){
-
-    }
-    public function actionDeleteUser($id){
-        \yii::$app->authManager->revokeAll($id);
-        \yii::$app->session->setFlash('success','删除用户角色成功');
-        return $this->redirect(['user/index']);
     }
 }

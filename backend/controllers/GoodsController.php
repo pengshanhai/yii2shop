@@ -9,7 +9,7 @@ use backend\models\GoodsDayCount;
 use backend\models\GoodsIntro;
 use xj\uploadify\UploadAction;
 
-class GoodsController extends \yii\web\Controller
+class GoodsController extends BackendController
 {
     public function actionIndex()
     {
@@ -36,8 +36,9 @@ class GoodsController extends \yii\web\Controller
         if($model->load(\yii::$app->request->post())&&$model->validate()&&$goods_intro->load(\yii::$app->request->post())&&$goods_intro->validate()){
             //var_dump($model);exit;
             $date=date('Y-m-d');
-            $goodsCount = new GoodsDayCount();
-            if($goodsCount->findOne(['day'=>$date])==null){
+            $goodsCount=GoodsDayCount::findOne(['day'=>$date]);
+            if($goodsCount==null){
+                $goodsCount = new GoodsDayCount();
                 $goodsCount->day=$date;
                 $goodsCount->count=0;
                 $goodsCount->save();
@@ -60,6 +61,7 @@ class GoodsController extends \yii\web\Controller
         return $this->render('edit', ['model' => $model,'goods_intro'=>$goods_intro, 'brand' => $brand, 'goods_category' => $goods_category]);
     }
     public function actionAlter($id){
+        $goods_intro=GoodsIntro::findOne(['goods_id'=>$id]);
         $brand=Brand::find()->all();
         $goods_category=GoodsCategory::find()->all();
         $model=Goods::findOne(['id'=>$id]);
@@ -70,7 +72,7 @@ class GoodsController extends \yii\web\Controller
             \yii::$app->session->setFlash('success','修改商品成功');
             return $this->redirect(['index']);
         }
-        return $this->render('edit', ['model' => $model, 'brand' => $brand, 'goods_category' => $goods_category]);
+        return $this->render('edit', ['model' => $model, 'brand' => $brand, 'goods_category' => $goods_category,'goods_intro'=>$goods_intro]);
     }
     public function actionDelete($id){
 

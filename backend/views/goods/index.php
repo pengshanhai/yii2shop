@@ -1,5 +1,4 @@
 <h1>商品列表</h1>
-<?=\yii\bootstrap\Html::a('增加商品',['add'],['class'=>'btn btn-primary'])?>
 <?php
 /* @var $this yii\web\View */
 //echo \yii\bootstrap\Html::beginForm(\yii\helpers\Url::to(['goods/index']),'get');

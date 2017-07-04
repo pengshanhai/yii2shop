@@ -6,7 +6,7 @@ use backend\models\GoodsCategory;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 
-class GoodsCategroyController extends \yii\web\Controller
+class GoodsCategoryController extends BackendController
 {
     public function actionIndex()
     {
